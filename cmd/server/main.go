@@ -49,6 +49,7 @@ func main() {
 
 	// define handlers
 	http.HandleFunc("/", bh)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/increase", ih)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
