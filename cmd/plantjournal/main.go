@@ -18,12 +18,13 @@ var (
 		Short: "Self-hosted plant journal to track plant care.",
 		Run: func(_cmd *cobra.Command, _args []string) {
 			ctx, cancel := context.WithCancel(context.Background())
+			logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 			// Create plant journal server
-			s, err := server.NewServer(ctx)
+			s, err := server.NewServer(ctx, logger)
 			if err != nil {
 				cancel()
-				slog.Error("failed to create server", "err", err)
+				logger.Error("failed to create server", "err", err)
 			}
 
 			// Listen for terminal signal and handle graceful shutdown of plant journal server
@@ -31,7 +32,6 @@ var (
 			signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 			go func() {
 				<-c
-				slog.Info("closing server")
 				s.Shutdown(ctx)
 				cancel()
 			}()
@@ -39,7 +39,7 @@ var (
 			// Start plant journal server
 			err = s.Start(ctx)
 			if err != nil && err != http.ErrServerClosed {
-				slog.Error("failed to start server")
+				logger.Error("failed to start server", "err", err)
 				cancel()
 			}
 
@@ -50,8 +50,6 @@ var (
 )
 
 func main() {
-	slog.Info("Plant Journal")
-
 	err := rootCmd.Execute()
 	if err != nil {
 		panic(err)
