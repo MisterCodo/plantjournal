@@ -48,9 +48,15 @@ func main() {
 	}
 
 	// define handlers
-	http.HandleFunc("/", bh)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.HandleFunc("/", bh)
 	http.HandleFunc("/increase", ih)
+	http.HandleFunc("/health", handleHealthCheck)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+// handleHealthCheck returns OK when a health check is performed
+func handleHealthCheck(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
 }
