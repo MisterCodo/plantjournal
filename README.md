@@ -23,3 +23,7 @@ Plant Journal is a pet project meant to help take care of plants.
 
 - User/account management
 - Stats/metrics
+
+## Resources
+
+- Favicon from [iconoir](https://iconoir.com/).
