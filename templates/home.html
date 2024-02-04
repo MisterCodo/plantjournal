@@ -1,3 +1,4 @@
+{{define "home.html"}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,7 +9,7 @@
     <link rel="stylesheet" href="/static/bulma.css" />
   </head>
   <body>
-    <h1 class="title">Plant Journal...</h1>
+    <h1 class="title">Plant Journal</h1>
     <div id="counter">{{.CounterValue}}</div>
     <button
       hx-target="#counter"
@@ -19,3 +20,4 @@
     </button>
   </body>
 </html>
+{{end}}
