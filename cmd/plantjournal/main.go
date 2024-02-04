@@ -10,9 +10,14 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
+	config *server.Config
+	addr   string
+	port   int
+
 	rootCmd = &cobra.Command{
 		Use:   "plant",
 		Short: "Self-hosted plant journal to track plant care.",
@@ -20,14 +25,14 @@ var (
 			ctx, cancel := context.WithCancel(context.Background())
 			logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
-			// Create plant journal server
-			s, err := server.NewServer(ctx, logger)
+			// Create plant journal server.
+			s, err := server.NewServer(ctx, logger, config)
 			if err != nil {
 				cancel()
 				logger.Error("failed to create server", "err", err)
 			}
 
-			// Listen for terminal signal and handle graceful shutdown of plant journal server
+			// Listen for terminal signal and handle graceful shutdown of plant journal server.
 			c := make(chan os.Signal, 1)
 			signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 			go func() {
@@ -36,18 +41,47 @@ var (
 				cancel()
 			}()
 
-			// Start plant journal server
+			// Start plant journal server.
 			err = s.Start(ctx)
 			if err != nil && err != http.ErrServerClosed {
 				logger.Error("failed to start server", "err", err)
 				cancel()
 			}
 
-			// Wait
+			// Wait.
 			<-ctx.Done()
 		},
 	}
 )
+
+func init() {
+	cobra.OnInitialize(initConfig)
+
+	rootCmd.PersistentFlags().StringVarP(&addr, "addr", "a", "", "address of server")
+	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 8080, "port of server")
+
+	err := viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
+	if err != nil {
+		panic(err)
+	}
+
+	viper.SetDefault("addr", "")
+	viper.SetDefault("port", 8080)
+	viper.SetEnvPrefix("plant")
+}
+
+func initConfig() {
+	viper.AutomaticEnv()
+	config = &server.Config{}
+	err := viper.Unmarshal(&config)
+	if err != nil {
+		panic(err)
+	}
+}
 
 func main() {
 	err := rootCmd.Execute()
