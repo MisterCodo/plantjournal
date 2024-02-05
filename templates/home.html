@@ -10,15 +10,7 @@
     <link rel="shortcut icon" href="/static/leaf.svg" type="image/svg" />
   </head>
   <body>
-    <h1 class="title">Plant Journal</h1>
-    <div id="counter">{{.CounterValue}}</div>
-    <button
-      hx-target="#counter"
-      hx-post="/increase"
-      class="button is-success is-light"
-    >
-      Increase
-    </button>
+    <div id="plant" hx-post="/plant" hx-trigger="load"></div>
   </body>
 </html>
 {{end}}

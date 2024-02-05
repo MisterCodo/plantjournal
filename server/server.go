@@ -12,9 +12,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-// Temporary counter variable, just for testing.
-var counter = 0
-
 // Server implements a plant journal server.
 type Server struct {
 	e      *echo.Echo
@@ -74,23 +71,20 @@ func NewServer(ctx context.Context, logger *slog.Logger, config *Config) (*Serve
 
 	// Serve other routes.
 	e.GET("/", HomeHandler)
-	e.POST("/increase", IncreaseHandler)
+	e.POST("/plant", PlantHandler)
 
 	return s, nil
 }
 
 func HomeHandler(c echo.Context) error {
-	return c.Render(http.StatusOK, "home.html", map[string]interface{}{
-		"CounterValue": counter,
-	})
+	return c.Render(http.StatusOK, "home.html", map[string]interface{}{})
 }
 
-func IncreaseHandler(c echo.Context) error {
-	counter++
+func PlantHandler(c echo.Context) error {
 	data := map[string]interface{}{
-		"CounterValue": counter,
+		"PlantName": "Philodendron",
 	}
-	return c.Render(http.StatusOK, "counter.html", data)
+	return c.Render(http.StatusOK, "plant.html", data)
 }
 
 // Start starts serving the server.

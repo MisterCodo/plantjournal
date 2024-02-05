@@ -1,0 +1,88 @@
+{{define "plant.html"}}
+<section class="section">
+  <div class="box">
+    <!-- Start of the columns layout -->
+    <div class="columns">
+      <!-- Left column for the image -->
+      <div class="column is-one-third">
+        <figure class="image is-3x4 is-inline-block">
+          <img src="/static/plantA.jpg" alt="Default plant" />
+        </figure>
+      </div>
+      <!-- Right column for the tables -->
+      <div class="column">
+        <!-- Section for the plant details table -->
+        <section class="section" style="padding-top: 0">
+          <div class="container">
+            <!-- <button class="button is-success is-light mr-2">Edit</button> -->
+            <table
+              class="table is-centered is-bordered is-striped is-fullwidth"
+            >
+              <tbody>
+                <tr>
+                  <td>Name</td>
+                  <td>{{.PlantName}}</td>
+                </tr>
+                <tr>
+                  <td>Lighting</td>
+                  <td>Bright indirect light, tolerates shade</td>
+                </tr>
+                <tr>
+                  <td>Watering</td>
+                  <td>Water when top 2 or 3 inches are dry</td>
+                </tr>
+                <tr>
+                  <td>Fertilizing</td>
+                  <td>Weak fertilizer during spring and summer</td>
+                </tr>
+                <tr>
+                  <td>Toxicity</td>
+                  <td>Toxic to humans, cats and dogs</td>
+                </tr>
+                <tr>
+                  <td>Notes</td>
+                  <td>Cutting from mother plant</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <!-- Section for the plant care table -->
+        <section class="section" style="padding-bottom: 0">
+          <div class="container">
+            <button class="button is-success is-light mr-2">Water</button>
+            <button class="button is-success is-light mr-2">Fertilize</button>
+            <table
+              class="table is-centered is-bordered is-striped is-fullwidth"
+            >
+              <tbody>
+                <tr>
+                  <td>Date</td>
+                  <td>Actions & Notes</td>
+                </tr>
+                <tr>
+                  <td>2024-01-10</td>
+                  <td>Watered - Fertilized</td>
+                </tr>
+                <tr>
+                  <td>2024-01-02</td>
+                  <td>Watered - Moved to a brighter location</td>
+                </tr>
+                <tr>
+                  <td>2023-12-27</td>
+                  <td>Fertilized</td>
+                </tr>
+                <tr>
+                  <td>2023-12-22</td>
+                  <td>Fertilized</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+    <!-- End of the columns layout -->
+  </div>
+</section>
+{{end}}
