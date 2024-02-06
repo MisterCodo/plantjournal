@@ -2,22 +2,10 @@ package v1
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
-
-// Plant contains the details of a plant.
-type Plant struct {
-	ID          int32
-	Name        string
-	Lighting    string
-	Watering    string
-	Fertilizing string
-	Toxicity    string
-	Notes       string
-	// TODO maintenance item.
-	// TODO image.
-}
 
 // registerPlantRoutes registers all routes related to plants.
 func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
@@ -38,25 +26,23 @@ func (a *APIV1Service) GetPlants(c echo.Context) error {
 
 // GetPlantsByID returns the plant with given id from the request.
 func (a *APIV1Service) GetPlantByID(c echo.Context) error {
-	// ctx := c.Request().Context()
+	ctx := c.Request().Context()
 
-	// id, err := util.ConvertStringToInt32(c.Param("id"))
-	// if err != nil {
-	// 	return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
-	// }
+	parsed, err := strconv.ParseInt(c.Param("id"), 10, 32)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+	id := int32(parsed)
 
-	// TODO: fetch plant by id from database. Delete hardcoded plant below.
-	p := Plant{
-		ID:          0,
-		Name:        "Neon Pothos",
-		Lighting:    "Bright indirect light, tolerates shade",
-		Watering:    "Water when top 2 or 3 inches are dry",
-		Fertilizing: "Weak fertilizer during spring and summer",
-		Toxicity:    "Toxic to humans, cats and dogs",
-		Notes:       "Cutting from mother plant",
+	// Fetch plant by id from store.
+	p, err := a.Store.GetPlantByID(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch plant").SetInternal(err)
 	}
 
+	// Set data for html template.
 	data := map[string]interface{}{
+		"ID":          p.ID,
 		"Name":        p.Name,
 		"Lighting":    p.Lighting,
 		"Watering":    p.Watering,
@@ -64,5 +50,6 @@ func (a *APIV1Service) GetPlantByID(c echo.Context) error {
 		"Toxicity":    p.Toxicity,
 		"Notes":       p.Notes,
 	}
+
 	return c.Render(http.StatusOK, "plant.html", data)
 }

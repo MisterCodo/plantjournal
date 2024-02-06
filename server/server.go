@@ -85,7 +85,7 @@ func NewServer(ctx context.Context, logger *slog.Logger, config *Config) (*Serve
 
 	// Serve API V1 routes.
 	rootGroup := e.Group("")
-	apiV1Service := v1.NewAPIV1Service()
+	apiV1Service := v1.NewAPIV1Service(s.store)
 	apiV1Service.Register(rootGroup)
 
 	return s, nil

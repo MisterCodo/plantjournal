@@ -1,15 +1,17 @@
 package v1
 
 import (
+	"github.com/MisterCodo/plantjournal/store"
 	"github.com/labstack/echo/v4"
 )
 
 type APIV1Service struct {
+	Store *store.Store
 }
 
 // NewAPIV1Service returns a new APIV1Service.
-func NewAPIV1Service() *APIV1Service {
-	return &APIV1Service{}
+func NewAPIV1Service(s *store.Store) *APIV1Service {
+	return &APIV1Service{Store: s}
 }
 
 // Register registers echo APIV1Service routes.
