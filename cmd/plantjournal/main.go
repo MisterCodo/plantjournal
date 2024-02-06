@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"plantjournal/server"
 	"syscall"
 
+	"github.com/MisterCodo/plantjournal/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

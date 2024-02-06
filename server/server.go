@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	v1 "github.com/MisterCodo/plantjournal/api/v1"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -69,22 +70,20 @@ func NewServer(ctx context.Context, logger *slog.Logger, config *Config) (*Serve
 		return c.String(http.StatusOK, "ok")
 	})
 
-	// Serve other routes.
+	// Serve home.
 	e.GET("/", HomeHandler)
-	e.POST("/plant", PlantHandler)
+
+	// Serve API V1 routes.
+	rootGroup := e.Group("")
+	apiV1Service := v1.NewAPIV1Service()
+	apiV1Service.Register(rootGroup)
 
 	return s, nil
 }
 
+// HomeHandler serves the home.html page.
 func HomeHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "home.html", map[string]interface{}{})
-}
-
-func PlantHandler(c echo.Context) error {
-	data := map[string]interface{}{
-		"PlantName": "Philodendron",
-	}
-	return c.Render(http.StatusOK, "plant.html", data)
 }
 
 // Start starts serving the server.

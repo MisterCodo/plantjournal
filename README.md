@@ -27,3 +27,4 @@ Plant Journal is a pet project meant to help take care of plants.
 ## Resources
 
 - Favicon from [iconoir](https://iconoir.com/).
+- CSS framework from [Bulma](https://bulma.io/).
