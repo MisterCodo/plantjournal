@@ -17,6 +17,7 @@ var (
 	config *server.Config
 	addr   string
 	port   int
+	db     string
 
 	rootCmd = &cobra.Command{
 		Use:   "plant",
@@ -59,6 +60,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&addr, "addr", "a", "", "address of server")
 	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 8080, "port of server")
+	rootCmd.PersistentFlags().StringVarP(&db, "db", "d", "plant.db", "database file to persist plant journal")
 
 	err := viper.BindPFlag("addr", rootCmd.PersistentFlags().Lookup("addr"))
 	if err != nil {
@@ -68,9 +70,14 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	err = viper.BindPFlag("db", rootCmd.PersistentFlags().Lookup("db"))
+	if err != nil {
+		panic(err)
+	}
 
 	viper.SetDefault("addr", "")
 	viper.SetDefault("port", 8080)
+	viper.SetDefault("db", "plant.db")
 	viper.SetEnvPrefix("plant")
 }
 

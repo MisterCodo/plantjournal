@@ -6,4 +6,6 @@ type Config struct {
 	Addr string
 	// Port is the server's binding port.
 	Port int
+	// DB is the server's database filename.
+	DB string
 }

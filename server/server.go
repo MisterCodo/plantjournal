@@ -9,8 +9,10 @@ import (
 	"time"
 
 	v1 "github.com/MisterCodo/plantjournal/api/v1"
+	"github.com/MisterCodo/plantjournal/store"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // Server implements a plant journal server.
@@ -18,9 +20,10 @@ type Server struct {
 	e      *echo.Echo
 	logger *slog.Logger
 	config *Config
+	store  *store.Store
 }
 
-// NewServer loads templates, sets the server and registers routes.
+// NewServer loads templates, establishes persistent data storage, sets the server and registers routes.
 func NewServer(ctx context.Context, logger *slog.Logger, config *Config) (*Server, error) {
 	e := echo.New()
 	e.HideBanner = true
@@ -55,11 +58,18 @@ func NewServer(ctx context.Context, logger *slog.Logger, config *Config) (*Serve
 	}
 	e.Renderer = t
 
+	// Set persistent data storage.
+	store, err := store.NewStore(config.DB)
+	if err != nil {
+		return nil, err
+	}
+
 	// Set new server.
 	s := &Server{
 		e:      e,
 		logger: logger,
 		config: config,
+		store:  store,
 	}
 
 	// Serve static content.
@@ -96,6 +106,7 @@ func (s *Server) Start(ctx context.Context) error {
 func (s *Server) Shutdown(ctx context.Context) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
+	defer s.store.Close()
 	defer s.logger.Info("closed server")
 
 	err := s.e.Shutdown(ctx)
