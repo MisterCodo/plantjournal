@@ -50,3 +50,34 @@ func (s *Store) GetPlantByID(ctx context.Context, id int32) (*Plant, error) {
 
 	return plant, nil
 }
+
+// GetPlants returns all plants.
+func (s *Store) GetPlants(ctx context.Context) ([]*Plant, error) {
+	plants := []*Plant{}
+
+	prep, err := s.db.Prepare("SELECT id, name, lighting, watering, fertilizing, toxicity, notes FROM plants ORDER BY id")
+	if err != nil {
+		return nil, err
+	}
+	defer prep.Close()
+
+	rows, err := prep.QueryContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		plant := &Plant{}
+		err := rows.Scan(&plant.ID, &plant.Name, &plant.Lighting, &plant.Watering, &plant.Fertilizing, &plant.Toxicity, &plant.Notes)
+		if err != nil {
+			return nil, err
+		}
+		plants = append(plants, plant)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return plants, nil
+}

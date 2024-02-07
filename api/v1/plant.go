@@ -9,19 +9,23 @@ import (
 
 // registerPlantRoutes registers all routes related to plants.
 func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
-	g.GET("/plant", a.GetPlants)
-	g.GET("/plant/:id", a.GetPlantByID)
+	g.GET("/plants", a.GetPlants)
+	g.GET("/plants/:id", a.GetPlantByID)
 }
 
 // GetPlants returns the list of all plants.
 func (a *APIV1Service) GetPlants(c echo.Context) error {
-	// ctx := c.Request().Context()
+	ctx := c.Request().Context()
 
-	// TODO: fetch plants from database.
+	// Fetch all plants from database.
+	plants, err := a.Store.GetPlants(ctx)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch all plants").SetInternal(err)
+	}
 
 	// TODO: return html.
 
-	return c.JSON(http.StatusOK, nil)
+	return c.Render(http.StatusOK, "plants.html", plants)
 }
 
 // GetPlantsByID returns the plant with given id from the request.

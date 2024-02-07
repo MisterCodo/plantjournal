@@ -27,6 +27,10 @@ func NewStore(filename string) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
+	_, err = s.CreatePlant(context.Background(), &Plant{Name: "Philodendron", Lighting: "Low", Watering: "Let soil dry", Fertilizing: "Rarely", Toxicity: "Oh no", Notes: "Test"})
+	if err != nil {
+		return nil, err
+	}
 
 	return s, nil
 }
