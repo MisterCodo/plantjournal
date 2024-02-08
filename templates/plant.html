@@ -20,32 +20,112 @@
             >
               <tbody>
                 <tr>
-                  <td>Identifier</td>
-                  <td>{{.ID}}</td>
-                </tr>
-                <tr>
                   <td>Name</td>
-                  <td contenteditable="true">{{.Name}}</td>
+                  <td
+                    id="plantName"
+                    contenteditable="true"
+                    hx-put="/api/v1/plants/{{.ID}}"
+                    hx-trigger="blur"
+                    hx-vals='js:{"name": document.getElementById("plantName").innerText,
+                                 "lighting": document.getElementById("plantLighting").innerText,
+                                 "watering": document.getElementById("plantWatering").innerText,
+                                 "fertilizing": document.getElementById("plantFertilizing").innerText,
+                                 "toxicity": document.getElementById("plantToxicity").innerText,
+                                 "notes": document.getElementById("plantNotes").innerText}'
+                    hx-swap="none"
+                  >
+                    {{.Name}}
+                  </td>
                 </tr>
                 <tr>
                   <td>Lighting</td>
-                  <td contenteditable="true">{{.Lighting}}</td>
+                  <td
+                    id="plantLighting"
+                    contenteditable="true"
+                    hx-put="/api/v1/plants/{{.ID}}"
+                    hx-trigger="blur"
+                    hx-vals='js:{"name": document.getElementById("plantName").innerText,
+                                 "lighting": document.getElementById("plantLighting").innerText,
+                                 "watering": document.getElementById("plantWatering").innerText,
+                                 "fertilizing": document.getElementById("plantFertilizing").innerText,
+                                 "toxicity": document.getElementById("plantToxicity").innerText,
+                                 "notes": document.getElementById("plantNotes").innerText}'
+                    hx-swap="none"
+                  >
+                    {{.Lighting}}
+                  </td>
                 </tr>
                 <tr>
                   <td>Watering</td>
-                  <td contenteditable="true">{{.Watering}}</td>
+                  <td
+                    id="plantWatering"
+                    contenteditable="true"
+                    hx-put="/api/v1/plants/{{.ID}}"
+                    hx-trigger="blur"
+                    hx-vals='js:{"name": document.getElementById("plantName").innerText,
+                                 "lighting": document.getElementById("plantLighting").innerText,
+                                 "watering": document.getElementById("plantWatering").innerText,
+                                 "fertilizing": document.getElementById("plantFertilizing").innerText,
+                                 "toxicity": document.getElementById("plantToxicity").innerText,
+                                 "notes": document.getElementById("plantNotes").innerText}'
+                    hx-swap="none"
+                  >
+                    {{.Watering}}
+                  </td>
                 </tr>
                 <tr>
                   <td>Fertilizing</td>
-                  <td contenteditable="true">{{.Fertilizing}}</td>
+                  <td
+                    id="plantFertilizing"
+                    contenteditable="true"
+                    hx-put="/api/v1/plants/{{.ID}}"
+                    hx-trigger="blur"
+                    hx-vals='js:{"name": document.getElementById("plantName").innerText,
+                                 "lighting": document.getElementById("plantLighting").innerText,
+                                 "watering": document.getElementById("plantWatering").innerText,
+                                 "fertilizing": document.getElementById("plantFertilizing").innerText,
+                                 "toxicity": document.getElementById("plantToxicity").innerText,
+                                 "notes": document.getElementById("plantNotes").innerText}'
+                    hx-swap="none"
+                  >
+                    {{.Fertilizing}}
+                  </td>
                 </tr>
                 <tr>
                   <td>Toxicity</td>
-                  <td contenteditable="true">{{.Toxicity}}</td>
+                  <td
+                    id="plantToxicity"
+                    contenteditable="true"
+                    hx-put="/api/v1/plants/{{.ID}}"
+                    hx-trigger="blur"
+                    hx-vals='js:{"name": document.getElementById("plantName").innerText,
+                                 "lighting": document.getElementById("plantLighting").innerText,
+                                 "watering": document.getElementById("plantWatering").innerText,
+                                 "fertilizing": document.getElementById("plantFertilizing").innerText,
+                                 "toxicity": document.getElementById("plantToxicity").innerText,
+                                 "notes": document.getElementById("plantNotes").innerText}'
+                    hx-swap="none"
+                  >
+                    {{.Toxicity}}
+                  </td>
                 </tr>
                 <tr>
                   <td>Notes</td>
-                  <td contenteditable="true">{{.Notes}}</td>
+                  <td
+                    id="plantNotes"
+                    contenteditable="true"
+                    hx-put="/api/v1/plants/{{.ID}}"
+                    hx-trigger="blur"
+                    hx-vals='js:{"name": document.getElementById("plantName").innerText,
+                                 "lighting": document.getElementById("plantLighting").innerText,
+                                 "watering": document.getElementById("plantWatering").innerText,
+                                 "fertilizing": document.getElementById("plantFertilizing").innerText,
+                                 "toxicity": document.getElementById("plantToxicity").innerText,
+                                 "notes": document.getElementById("plantNotes").innerText}'
+                    hx-swap="none"
+                  >
+                    {{.Notes}}
+                  </td>
                 </tr>
               </tbody>
             </table>

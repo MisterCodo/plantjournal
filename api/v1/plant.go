@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -13,6 +14,7 @@ func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
 	g.GET("/plants", a.GetPlants)
 	g.GET("/plants/:id", a.GetPlantByID)
 	g.POST("/plants", a.CreatePlant)
+	g.PUT("/plants/:id", a.UpdatePlant)
 }
 
 // GetPlants returns the list of all plants.
@@ -64,4 +66,49 @@ func (a *APIV1Service) CreatePlant(c echo.Context) error {
 	// TODO: Fix selected plant from list. Currently focus is removed but a plant details section is still showed.
 
 	return c.Render(http.StatusOK, "plants.html", plants)
+}
+
+type UpdatePlantRequest struct {
+	Name        string `form:"name"`
+	Lighting    string `form:"lighting"`
+	Watering    string `form:"watering"`
+	Fertilizing string `form:"fertilizing"`
+	Toxicity    string `form:"toxicity"`
+	Notes       string `form:"notes"`
+}
+
+// UpdatePlant updates the plant in the database.
+func (a *APIV1Service) UpdatePlant(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	// Fetch plant details from request.
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+	r := &UpdatePlantRequest{}
+	if err := c.Bind(r); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "could not get details for plant update request").SetInternal(err)
+	}
+
+	// Set plant for store update.
+	p := &store.Plant{
+		ID:          id,
+		Name:        r.Name,
+		Lighting:    r.Lighting,
+		Watering:    r.Watering,
+		Fertilizing: r.Fertilizing,
+		Toxicity:    r.Toxicity,
+		Notes:       r.Notes,
+	}
+
+	// Update plant in database.
+	err = a.Store.UpdatePlant(ctx, p)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to update plant").SetInternal(err)
+	}
+
+	// TODO: Update plant name in plant list.
+
+	return c.String(http.StatusOK, fmt.Sprintf("updated plant %d", id))
 }

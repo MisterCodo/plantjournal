@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"fmt"
 )
 
 // Plant contains the details of a plant.
@@ -80,4 +81,28 @@ func (s *Store) GetPlants(ctx context.Context) ([]*Plant, error) {
 	}
 
 	return plants, nil
+}
+
+// UdatePlant updates the passed plant in the database.
+func (s *Store) UpdatePlant(ctx context.Context, p *Plant) error {
+	prep, err := s.db.Prepare("UPDATE plants SET name=?, lighting=?, watering=?, fertilizing=?, toxicity=?, notes=? WHERE id=?")
+	if err != nil {
+		return err
+	}
+	defer prep.Close()
+
+	res, err := prep.ExecContext(ctx, p.Name, p.Lighting, p.Watering, p.Fertilizing, p.Toxicity, p.Notes, p.ID)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows != 1 {
+		return fmt.Errorf("failed to update plant")
+	}
+
+	return nil
 }
