@@ -1,0 +1,16 @@
+/* Hide the actual radio buttons */
+.hidden-radio {
+  display: none;
+}
+
+/* Style the label to look like it's selected */
+.menu-item-label {
+  cursor: pointer;
+  /* Add any default styles for unselected items here */
+}
+
+/* Style the label when the radio button is checked */
+.hidden-radio:checked + .menu-item-label {
+  background-color: #ced6c7;
+  /* Add any other styles for selected items here */
+}

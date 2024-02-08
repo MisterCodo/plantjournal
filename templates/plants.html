@@ -3,14 +3,23 @@
   <h1 class="title">Plants</h1>
   <aside class="menu">
     <ul class="menu-list">
-      {{ range . }}
+      {{ range $index, $element := . }}
       <li hx-target="this" hx-swap="outerHTML">
-        <a
-          hx-get="/api/v1/plants/{{ .ID }}"
+        <input
+          type="radio"
+          id="item-{{ $index }}"
+          name="menu-items"
+          class="hidden-radio"
+        />
+        <label
+          for="item-{{ $index }}"
+          class="menu-item-label"
+          hx-get="/api/v1/plants/{{ $element.ID }}"
           hx-target="#plant"
           hx-trigger="click"
-          >({{ .ID }}) {{ .Name }}</a
         >
+          ({{ $element.ID }}) {{ $element.Name }}
+        </label>
       </li>
       {{ end }}
     </ul>

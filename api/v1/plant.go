@@ -23,8 +23,6 @@ func (a *APIV1Service) GetPlants(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch all plants").SetInternal(err)
 	}
 
-	// TODO: return html.
-
 	return c.Render(http.StatusOK, "plants.html", plants)
 }
 
@@ -32,11 +30,10 @@ func (a *APIV1Service) GetPlants(c echo.Context) error {
 func (a *APIV1Service) GetPlantByID(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	parsed, err := strconv.ParseInt(c.Param("id"), 10, 32)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
 	}
-	id := int32(parsed)
 
 	// Fetch plant by id from store.
 	p, err := a.Store.GetPlantByID(ctx, id)
@@ -44,16 +41,5 @@ func (a *APIV1Service) GetPlantByID(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch plant").SetInternal(err)
 	}
 
-	// Set data for html template.
-	data := map[string]interface{}{
-		"ID":          p.ID,
-		"Name":        p.Name,
-		"Lighting":    p.Lighting,
-		"Watering":    p.Watering,
-		"Fertilizing": p.Fertilizing,
-		"Toxicity":    p.Toxicity,
-		"Notes":       p.Notes,
-	}
-
-	return c.Render(http.StatusOK, "plant.html", data)
+	return c.Render(http.StatusOK, "plant.html", p)
 }

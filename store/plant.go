@@ -6,7 +6,7 @@ import (
 
 // Plant contains the details of a plant.
 type Plant struct {
-	ID          int32
+	ID          int
 	Name        string
 	Lighting    string
 	Watering    string
@@ -34,7 +34,7 @@ func (s *Store) CreatePlant(ctx context.Context, p *Plant) (*Plant, error) {
 }
 
 // GetPlantByID returns the plant with specified identifier.
-func (s *Store) GetPlantByID(ctx context.Context, id int32) (*Plant, error) {
+func (s *Store) GetPlantByID(ctx context.Context, id int) (*Plant, error) {
 	plant := &Plant{}
 
 	prep, err := s.db.Prepare("SELECT id, name, lighting, watering, fertilizing, toxicity, notes FROM plants WHERE id=?")

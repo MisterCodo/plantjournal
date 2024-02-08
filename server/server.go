@@ -12,7 +12,6 @@ import (
 	"github.com/MisterCodo/plantjournal/store"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 // Server implements a plant journal server.
