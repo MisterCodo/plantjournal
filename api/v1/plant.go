@@ -108,7 +108,6 @@ func (a *APIV1Service) UpdatePlant(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to update plant").SetInternal(err)
 	}
 
-	// TODO: Update plant name in plant list.
-
-	return c.String(http.StatusOK, fmt.Sprintf("updated plant %d", id))
+	// Update plant label in plant list.
+	return c.String(http.StatusOK, fmt.Sprintf("(%d) %s", p.ID, p.Name))
 }

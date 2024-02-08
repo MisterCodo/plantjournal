@@ -32,7 +32,8 @@
                                  "fertilizing": document.getElementById("plantFertilizing").innerText,
                                  "toxicity": document.getElementById("plantToxicity").innerText,
                                  "notes": document.getElementById("plantNotes").innerText}'
-                    hx-swap="none"
+                    hx-target="#plant-item-label-{{.ID}}"
+                    hx-swap="innerHTML"
                   >
                     {{.Name}}
                   </td>
