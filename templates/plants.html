@@ -1,22 +1,19 @@
 {{define "plants.html"}}
-<table>
-  <thead>
-    <tr>
-      <th>Click Plant to manage</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{ range . }}
-    <tr hx-target="this" hx-swap="outerHTML">
-      <td
-        hx-get="/api/v1/plants/{{ .ID }}"
-        hx-target="#plant"
-        hx-trigger="click"
-      >
-        ({{ .ID }}) {{ .Name }}
-      </td>
-    </tr>
-    {{ end }}
-  </tbody>
-</table>
+<div class="box">
+  <h1 class="title">Plants</h1>
+  <aside class="menu">
+    <ul class="menu-list">
+      {{ range . }}
+      <li hx-target="this" hx-swap="outerHTML">
+        <a
+          hx-get="/api/v1/plants/{{ .ID }}"
+          hx-target="#plant"
+          hx-trigger="click"
+          >({{ .ID }}) {{ .Name }}</a
+        >
+      </li>
+      {{ end }}
+    </ul>
+  </aside>
+</div>
 {{end}}

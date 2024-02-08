@@ -1,94 +1,92 @@
 {{define "plant.html"}}
 <div id="plant">
-  <section class="section">
-    <div class="box">
-      <!-- Start of the columns layout -->
-      <div class="columns">
-        <!-- Left column for the image -->
-        <div class="column is-one-third">
-          <figure class="image is-3x4 is-inline-block">
-            <img src="/static/plantA.jpg" alt="Default plant" />
-          </figure>
-        </div>
-        <!-- Right column for the tables -->
-        <div class="column">
-          <!-- Section for the plant details table -->
-          <section class="section" style="padding-top: 0">
-            <div class="container">
-              <!-- <button class="button is-success is-light mr-2">Edit</button> -->
-              <table
-                class="table is-centered is-bordered is-striped is-fullwidth"
-              >
-                <tbody>
-                  <tr>
-                    <td>Identifier</td>
-                    <td>{{.ID}}</td>
-                  </tr>
-                  <tr>
-                    <td>Name</td>
-                    <td contenteditable="true">{{.Name}}</td>
-                  </tr>
-                  <tr>
-                    <td>Lighting</td>
-                    <td contenteditable="true">{{.Lighting}}</td>
-                  </tr>
-                  <tr>
-                    <td>Watering</td>
-                    <td contenteditable="true">{{.Watering}}</td>
-                  </tr>
-                  <tr>
-                    <td>Fertilizing</td>
-                    <td contenteditable="true">{{.Fertilizing}}</td>
-                  </tr>
-                  <tr>
-                    <td>Toxicity</td>
-                    <td contenteditable="true">{{.Toxicity}}</td>
-                  </tr>
-                  <tr>
-                    <td>Notes</td>
-                    <td contenteditable="true">{{.Notes}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          <!-- Section for the plant care table -->
-          <section class="section" style="padding-bottom: 0">
-            <div class="container">
-              <button class="button is-success is-light mr-2">Water</button>
-              <button class="button is-success is-light mr-2">Fertilize</button>
-              <table
-                class="table is-centered is-bordered is-striped is-fullwidth"
-              >
-                <tbody>
-                  <tr>
-                    <td>Date</td>
-                    <td>Actions & Notes</td>
-                  </tr>
-                  <tr>
-                    <td>2024-01-10</td>
-                    <td>Watered - Fertilized</td>
-                  </tr>
-                  <tr>
-                    <td>2024-01-02</td>
-                    <td>Watered - Moved to a brighter location</td>
-                  </tr>
-                  <tr>
-                    <td>2023-12-27</td>
-                    <td>Fertilized</td>
-                  </tr>
-                  <tr>
-                    <td>2023-12-22</td>
-                    <td>Fertilized</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </div>
+  <div class="box">
+    <!-- Start of the columns layout -->
+    <div class="columns">
+      <!-- Left column for the image -->
+      <div class="column is-one-third">
+        <figure class="image is-3x4 is-inline-block">
+          <img src="/static/plantA.jpg" alt="Default plant" />
+        </figure>
       </div>
-      <!-- End of the columns layout -->
+      <!-- Right column for the tables -->
+      <div class="column">
+        <!-- Section for the plant details table -->
+        <section class="section" style="padding-top: 0">
+          <div class="container">
+            <!-- <button class="button is-success is-light mr-2">Edit</button> -->
+            <table
+              class="table is-centered is-bordered is-striped is-fullwidth"
+            >
+              <tbody>
+                <tr>
+                  <td>Identifier</td>
+                  <td>{{.ID}}</td>
+                </tr>
+                <tr>
+                  <td>Name</td>
+                  <td contenteditable="true">{{.Name}}</td>
+                </tr>
+                <tr>
+                  <td>Lighting</td>
+                  <td contenteditable="true">{{.Lighting}}</td>
+                </tr>
+                <tr>
+                  <td>Watering</td>
+                  <td contenteditable="true">{{.Watering}}</td>
+                </tr>
+                <tr>
+                  <td>Fertilizing</td>
+                  <td contenteditable="true">{{.Fertilizing}}</td>
+                </tr>
+                <tr>
+                  <td>Toxicity</td>
+                  <td contenteditable="true">{{.Toxicity}}</td>
+                </tr>
+                <tr>
+                  <td>Notes</td>
+                  <td contenteditable="true">{{.Notes}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <!-- Section for the plant care table -->
+        <section class="section" style="padding-bottom: 0">
+          <div class="container">
+            <button class="button is-success is-light mr-2">Water</button>
+            <button class="button is-success is-light mr-2">Fertilize</button>
+            <table
+              class="table is-centered is-bordered is-striped is-fullwidth"
+            >
+              <tbody>
+                <tr>
+                  <td>Date</td>
+                  <td>Actions & Notes</td>
+                </tr>
+                <tr>
+                  <td>2024-01-10</td>
+                  <td>Watered - Fertilized</td>
+                </tr>
+                <tr>
+                  <td>2024-01-02</td>
+                  <td>Watered - Moved to a brighter location</td>
+                </tr>
+                <tr>
+                  <td>2023-12-27</td>
+                  <td>Fertilized</td>
+                </tr>
+                <tr>
+                  <td>2023-12-22</td>
+                  <td>Fertilized</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </div>
-  </section>
+    <!-- End of the columns layout -->
+  </div>
 </div>
 {{end}}

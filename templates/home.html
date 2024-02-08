@@ -10,8 +10,26 @@
     <link rel="shortcut icon" href="/static/leaf.svg" type="image/svg" />
   </head>
   <body>
-    <div id="plants" hx-get="/api/v1/plants" hx-trigger="load"></div>
-    <div id="plant"></div>
+    <!-- Main container -->
+    <div class="container">
+      <div class="columns is-multiline">
+        <!-- Plant selector - left column -->
+        <div
+          class="column is-one-fifth"
+          style="
+            position: relative;
+            max-height: calc(100vh - 1em);
+            overflow-y: auto;
+          "
+        >
+          <div id="plants" hx-get="/api/v1/plants" hx-trigger="load"></div>
+        </div>
+        <!-- Plant picture and details - right column -->
+        <div class="column is-four-fifths">
+          <div id="plant"></div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
 {{end}}
