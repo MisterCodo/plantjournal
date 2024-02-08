@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/MisterCodo/plantjournal/store"
 	"github.com/labstack/echo/v4"
 )
 
@@ -11,6 +12,7 @@ import (
 func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
 	g.GET("/plants", a.GetPlants)
 	g.GET("/plants/:id", a.GetPlantByID)
+	g.POST("/plants", a.CreatePlant)
 }
 
 // GetPlants returns the list of all plants.
@@ -42,4 +44,24 @@ func (a *APIV1Service) GetPlantByID(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "plant.html", p)
+}
+
+// CreatePlant creates a new blank plant.
+func (a *APIV1Service) CreatePlant(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	_, err := a.Store.CreatePlant(ctx, &store.Plant{Name: "New Plant"})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create new plant").SetInternal(err)
+	}
+
+	// Refresh list of plants.
+	plants, err := a.Store.GetPlants(ctx)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to refresh plants list").SetInternal(err)
+	}
+
+	// TODO: Fix selected plant from list. Currently focus is removed but a plant details section is still showed.
+
+	return c.Render(http.StatusOK, "plants.html", plants)
 }

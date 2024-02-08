@@ -1,7 +1,6 @@
 package store
 
 import (
-	"context"
 	"database/sql"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -20,16 +19,6 @@ func NewStore(filename string) (*Store, error) {
 
 	s := &Store{db: db}
 	err = s.Initialize()
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: Delete this code.
-	_, err = s.CreatePlant(context.Background(), &Plant{Name: "Spider", Lighting: "Low", Watering: "Let soil dry", Fertilizing: "Rarely", Toxicity: "Oh no", Notes: "Test"})
-	if err != nil {
-		return nil, err
-	}
-	_, err = s.CreatePlant(context.Background(), &Plant{Name: "Philodendron", Lighting: "Low", Watering: "Let soil dry", Fertilizing: "Rarely", Toxicity: "Oh no", Notes: "Test"})
 	if err != nil {
 		return nil, err
 	}

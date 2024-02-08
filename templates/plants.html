@@ -1,6 +1,17 @@
 {{define "plants.html"}}
 <div class="box">
-  <h1 class="title">Plants</h1>
+  <h1 class="title">
+    Plants
+    <span
+      class="icon is-small has-text-success"
+      style="cursor: pointer"
+      hx-post="/api/v1/plants"
+      hx-trigger="click"
+      hx-target="#plants"
+    >
+      <i class="iconoir-plus-circle"></i>
+    </span>
+  </h1>
   <aside class="menu">
     <ul class="menu-list">
       {{ range $index, $element := . }}
