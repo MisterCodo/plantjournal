@@ -1,0 +1,43 @@
+# Ignore version control system directories
+.git
+.svn
+
+# Ignore OS and IDE specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Go build artifacts and cache files
+_obj
+*.exe
+*.dll
+*.dylib
+*.so
+
+# Ignore test cache directories
+_test
+
+# Ignore IDE project files
+*.idea
+*.project
+*.workspace
+
+# Ignore environment variables file
+.env
+
+# Ignore sensitive data files
+*.pem
+*.key
+*.crt
+*.pfx
+
+# Ignore GitHub workflows related files
+.github/*
+.golangci.yml
+
+# Ignore Dockerfiles and docker-compose files
+Dockerfile*
+docker-compose*
+
+# Keep README and license files in the image
+!README.md
+!LICENSE
