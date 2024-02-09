@@ -8,12 +8,13 @@
       hx-post="/api/v1/plants"
       hx-trigger="click"
       hx-target="#plants"
+      title="Add New Plant"
     >
       <i class="iconoir-plus-circle"></i>
     </span>
   </h1>
   <aside class="menu">
-    <ul class="menu-list">
+    <ul class="menu-list is-hoverable">
       {{ range . }}
       <li hx-target="this" hx-swap="outerHTML">
         <input

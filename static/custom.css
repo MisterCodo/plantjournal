@@ -9,8 +9,12 @@
   /* Add any default styles for unselected items here */
 }
 
+.menu-item-label:hover {
+  background-color: #e7e7e7;
+}
+
 /* Style the label when the radio button is checked */
 .hidden-radio:checked + .menu-item-label {
-  background-color: #ced6c7;
+  background-color: #e7e7e7;
   /* Add any other styles for selected items here */
 }
