@@ -106,3 +106,27 @@ func (s *Store) UpdatePlant(ctx context.Context, p *Plant) error {
 
 	return nil
 }
+
+// DeletePlant deletes the plant with passed id.
+func (s *Store) DeletePlant(ctx context.Context, id int) error {
+	prep, err := s.db.Prepare("DELETE FROM plants WHERE id=?")
+	if err != nil {
+		return err
+	}
+	defer prep.Close()
+
+	res, err := prep.ExecContext(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows != 1 {
+		return fmt.Errorf("failed to delete plant")
+	}
+
+	return nil
+}

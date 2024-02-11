@@ -15,6 +15,7 @@ func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
 	g.GET("/plants/:id", a.GetPlantByID)
 	g.POST("/plants", a.CreatePlant)
 	g.PUT("/plants/:id", a.UpdatePlant)
+	g.DELETE("/plants/:id", a.DeletePlant)
 }
 
 // GetPlants returns the list of all plants.
@@ -110,4 +111,26 @@ func (a *APIV1Service) UpdatePlant(c echo.Context) error {
 
 	// Update plant label in plant list.
 	return c.String(http.StatusOK, fmt.Sprintf("(%d) %s", p.ID, p.Name))
+}
+
+// DeletePlant deletes the plant with passed id value from the database.
+func (a *APIV1Service) DeletePlant(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	// Fetch plant details from request.
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+
+	// Delete plant from database.
+	err = a.Store.DeletePlant(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to delete plant").SetInternal(err)
+	}
+
+	// Trigger a full page reload.
+	c.Response().Header().Set("HX-Redirect", "/")
+
+	return c.NoContent(http.StatusOK)
 }
