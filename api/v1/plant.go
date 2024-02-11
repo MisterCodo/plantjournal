@@ -58,15 +58,10 @@ func (a *APIV1Service) CreatePlant(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create new plant").SetInternal(err)
 	}
 
-	// Refresh list of plants.
-	plants, err := a.Store.GetPlants(ctx)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to refresh plants list").SetInternal(err)
-	}
+	// TODO: Doing a full page reload for now, but not ideal behavior.
+	c.Response().Header().Set("HX-Redirect", "/")
 
-	// TODO: Fix selected plant from list. Currently focus is removed but a plant details section is still showed.
-
-	return c.Render(http.StatusOK, "plants.html", plants)
+	return c.NoContent(http.StatusOK)
 }
 
 type UpdatePlantRequest struct {
