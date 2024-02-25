@@ -14,7 +14,7 @@ type Plant struct {
 	Fertilizing string
 	Toxicity    string
 	Notes       string
-	// TODO maintenance item.
+	Actions     []*Action
 	// TODO images.
 }
 
@@ -48,6 +48,13 @@ func (s *Store) GetPlantByID(ctx context.Context, id int) (*Plant, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Fetch plant maintenance actions.
+	actions, err := s.GetActionsByPlantID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	plant.Actions = actions
 
 	return plant, nil
 }

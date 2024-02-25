@@ -33,13 +33,27 @@ func (s *Store) Close() error {
 
 // Initialize sets database tables if needed.
 func (s *Store) Initialize() error {
-	statement, err := s.db.Prepare("CREATE TABLE IF NOT EXISTS plants (id INTEGER PRIMARY KEY, name TEXT, lighting TEXT, watering TEXT, fertilizing TEXT, toxicity TEXT, notes TEXT)")
-	if err != nil {
-		return err
-	}
-	defer statement.Close()
+	initDatabase := `
+	CREATE TABLE IF NOT EXISTS plants (
+		id INTEGER PRIMARY KEY,
+		name TEXT,
+		lighting TEXT,
+		watering TEXT,
+		fertilizing TEXT,
+		toxicity TEXT,
+		notes TEXT
+	);
+	CREATE TABLE IF NOT EXISTS actions (
+		id INTEGER PRIMARY KEY,
+		plant_id INTEGER NOT NULL,
+	    day TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d', 'now')),
+		watered INTEGER CHECK(watered IN(0, 1)),
+		fertilized INTEGER CHECK(fertilized IN(0, 1)),
+		notes TEXT,
+		FOREIGN KEY (plant_id) REFERENCES plants(id)
+	);`
 
-	_, err = statement.Exec()
+	_, err := s.db.Exec(initDatabase)
 	if err != nil {
 		return err
 	}
