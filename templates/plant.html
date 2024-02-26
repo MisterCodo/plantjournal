@@ -16,7 +16,7 @@
           <!-- Button for water -->
           <div class="column">
             <button
-              hx-post="api/v1/plants/{{.ID}}/water"
+              hx-put="api/v1/plants/{{.ID}}/water"
               class="button is-fullwidth is-info"
               title="Water"
             >
@@ -26,7 +26,7 @@
           <!-- Button for fertilize -->
           <div class="column">
             <button
-              hx-post="api/v1/plants/{{.ID}}/fertilize"
+              hx-put="api/v1/plants/{{.ID}}/fertilize"
               class="button is-fullwidth is-success"
               title="Fertilize"
             >
@@ -36,7 +36,7 @@
           <!-- Button for note -->
           <div class="column">
             <button
-              hx-post="api/v1/plants/{{.ID}}/note"
+              hx-put="api/v1/plants/{{.ID}}/note"
               class="button is-fullwidth is-success"
               title="Add Note"
             >
@@ -185,16 +185,22 @@
               class="table is-centered is-bordered is-striped is-fullwidth"
             >
               <tbody>
+                {{ range .Actions }}
                 <tr>
-                  <td style="text-align: center; width: 20%">2024-02-25</td>
+                  <td style="text-align: center; width: 20%">{{ .Day }}</td>
                   <td style="text-align: center; width: 7%">
+                    {{ if .Watered }}
                     <i class="iconoir-droplet"></i>
+                    {{ end }}
                   </td>
                   <td style="text-align: center; width: 7%">
+                    {{ if .Fertilized }}
                     <i class="iconoir-potion"></i>
+                    {{ end }}
                   </td>
-                  <td>Acquired plant from friend</td>
+                  <td>{{ .Notes }}</td>
                 </tr>
+                {{ end }}
               </tbody>
             </table>
           </div>

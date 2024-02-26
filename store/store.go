@@ -44,12 +44,12 @@ func (s *Store) Initialize() error {
 		notes TEXT
 	);
 	CREATE TABLE IF NOT EXISTS actions (
-		id INTEGER PRIMARY KEY,
-		plant_id INTEGER NOT NULL,
-	    day TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d', 'now')),
+		day TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d', 'now')),
+		plant_id INTEGER NOT NULL,	    
 		watered INTEGER CHECK(watered IN(0, 1)),
 		fertilized INTEGER CHECK(fertilized IN(0, 1)),
 		notes TEXT,
+		PRIMARY KEY (day, plant_id),
 		FOREIGN KEY (plant_id) REFERENCES plants(id)
 	);`
 

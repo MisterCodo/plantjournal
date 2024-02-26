@@ -15,6 +15,8 @@ func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
 	g.GET("/plants/:id", a.GetPlantByID)
 	g.POST("/plants", a.CreatePlant)
 	g.PUT("/plants/:id", a.UpdatePlant)
+	g.PUT("/plants/:id/water", a.WaterPlant)
+	g.PUT("/plants/:id/fertilize", a.FertilizePlant)
 	g.DELETE("/plants/:id", a.DeletePlant)
 }
 
@@ -126,6 +128,50 @@ func (a *APIV1Service) DeletePlant(c echo.Context) error {
 
 	// Trigger a full page reload.
 	c.Response().Header().Set("HX-Redirect", "/")
+
+	return c.NoContent(http.StatusOK)
+}
+
+// WaterPlant saves an action of watering on today's date for the plant with passed id. If plant was already
+// watered today, nothing is changed in the database.
+func (a *APIV1Service) WaterPlant(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	// Fetch plant details from request.
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+
+	// Upsert watering action in database.
+	_, err = a.Store.WaterPlant(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to water plant").SetInternal(err)
+	}
+
+	// TODO: htmx
+
+	return c.NoContent(http.StatusOK)
+}
+
+// FertilizePlant saves an action of fertilizing on today's date for the plant with passed id. If plant was already
+// fertilized today, nothing is changed in the database.
+func (a *APIV1Service) FertilizePlant(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	// Fetch plant details from request.
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+
+	// Upsert fertilizing action in database.
+	_, err = a.Store.FertilizePlant(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fertilize plant").SetInternal(err)
+	}
+
+	// TODO: htmx
 
 	return c.NoContent(http.StatusOK)
 }
