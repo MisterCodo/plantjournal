@@ -12,7 +12,7 @@ type Store struct {
 
 // NewStore opens an existing sqlite3 database or creates a new one if it does not yet exists.
 func NewStore(filename string) (*Store, error) {
-	db, err := sql.Open("sqlite3", filename)
+	db, err := sql.Open("sqlite3", filename+"?_fk=on")
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (s *Store) Initialize() error {
 		fertilized INTEGER CHECK(fertilized IN(0, 1)),
 		notes TEXT,
 		PRIMARY KEY (day, plant_id),
-		FOREIGN KEY (plant_id) REFERENCES plants(id)
+		FOREIGN KEY (plant_id) REFERENCES plants(id) ON DELETE CASCADE
 	);`
 
 	_, err := s.db.Exec(initDatabase)

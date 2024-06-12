@@ -149,9 +149,13 @@ func (a *APIV1Service) WaterPlant(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to water plant").SetInternal(err)
 	}
 
-	// TODO: htmx
+	// Refresh entire plant to see latest plant actions.
+	p, err := a.Store.GetPlantByID(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch plant").SetInternal(err)
+	}
 
-	return c.NoContent(http.StatusOK)
+	return c.Render(http.StatusOK, "plant.html", p)
 }
 
 // FertilizePlant saves an action of fertilizing on today's date for the plant with passed id. If plant was already
@@ -171,7 +175,11 @@ func (a *APIV1Service) FertilizePlant(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fertilize plant").SetInternal(err)
 	}
 
-	// TODO: htmx
+	// Refresh entire plant to see latest plant actions.
+	p, err := a.Store.GetPlantByID(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch plant").SetInternal(err)
+	}
 
-	return c.NoContent(http.StatusOK)
+	return c.Render(http.StatusOK, "plant.html", p)
 }

@@ -17,6 +17,7 @@
           <div class="column">
             <button
               hx-put="api/v1/plants/{{.ID}}/water"
+              hx-target="#plant"
               class="button is-fullwidth is-info"
               title="Water"
             >
@@ -27,6 +28,7 @@
           <div class="column">
             <button
               hx-put="api/v1/plants/{{.ID}}/fertilize"
+              hx-target="#plant"
               class="button is-fullwidth is-success"
               title="Fertilize"
             >
@@ -37,6 +39,7 @@
           <div class="column">
             <button
               hx-put="api/v1/plants/{{.ID}}/note"
+              hx-target="#plant"
               class="button is-fullwidth is-success"
               title="Add Note"
             >
