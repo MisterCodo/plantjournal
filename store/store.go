@@ -35,7 +35,7 @@ func (s *Store) Close() error {
 func (s *Store) Initialize() error {
 	initDatabase := `
 	CREATE TABLE IF NOT EXISTS plants (
-		id INTEGER PRIMARY KEY,
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT,
 		lighting TEXT,
 		watering TEXT,

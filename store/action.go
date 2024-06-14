@@ -42,11 +42,6 @@ func (s *Store) GetActionsByPlantID(ctx context.Context, plantID int) ([]*Action
 		return nil, err
 	}
 
-	// DELETE THIS
-	actions = append(actions, &Action{Day: "2024-02-24", PlantID: plantID, Watered: true, Fertilized: false, Notes: "debugging a"})
-	actions = append(actions, &Action{Day: "2024-02-23", PlantID: plantID, Watered: true, Fertilized: true, Notes: "debugging b"})
-	actions = append(actions, &Action{Day: "2024-02-21", PlantID: plantID, Watered: false, Fertilized: false, Notes: "debugging c"})
-
 	return actions, nil
 }
 
