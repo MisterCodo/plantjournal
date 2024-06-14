@@ -17,6 +17,7 @@ func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
 	g.PUT("/plants/:id", a.UpdatePlant)
 	g.PUT("/plants/:id/water", a.WaterPlant)
 	g.PUT("/plants/:id/fertilize", a.FertilizePlant)
+	g.PUT("/plants/:id/note", a.AddNoteToPlant)
 	g.DELETE("/plants/:id", a.DeletePlant)
 	g.DELETE("/plants/:id/actions/:day", a.DeleteAction)
 }
@@ -174,6 +175,31 @@ func (a *APIV1Service) FertilizePlant(c echo.Context) error {
 	_, err = a.Store.FertilizePlant(ctx, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fertilize plant").SetInternal(err)
+	}
+
+	// Refresh entire plant to see latest plant actions.
+	p, err := a.Store.GetPlantByID(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch plant").SetInternal(err)
+	}
+
+	return c.Render(http.StatusOK, "plant.html", p)
+}
+
+// AddNoteToPlant saves an action on today's date for the plant with passed id.
+func (a *APIV1Service) AddNoteToPlant(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	// Fetch plant details from request.
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+
+	// Upsert add note to plant action in database.
+	_, err = a.Store.AddNoteToPlant(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to add note to plant").SetInternal(err)
 	}
 
 	// Refresh entire plant to see latest plant actions.

@@ -14,12 +14,6 @@ type Action struct {
 	Notes      string
 }
 
-// CreateAction inserts a new action in the database and returns the plant back with its ID.
-func (s *Store) CreateAction(ctx context.Context, a *Action) (*Action, error) {
-	// TODO
-	return nil, nil
-}
-
 // GetActionsByPlantID returns all actions for a plant with passed id.
 func (s *Store) GetActionsByPlantID(ctx context.Context, plantID int) ([]*Action, error) {
 	actions := []*Action{}
@@ -91,6 +85,24 @@ func (s *Store) FertilizePlant(ctx context.Context, plantID int) (*Action, error
 	action := &Action{}
 	day := time.Now().Format("2006-01-02")
 	err = prep.QueryRowContext(ctx, day, plantID, 0, 1, "", 1).Scan(&action.Day, &action.PlantID, &action.Watered, &action.Fertilized, &action.Notes)
+	if err != nil {
+		return nil, err
+	}
+
+	return action, nil
+}
+
+// AddNoteToPlant upserts an action for the day.
+func (s *Store) AddNoteToPlant(ctx context.Context, plantID int) (*Action, error) {
+	prep, err := s.db.Prepare("INSERT INTO actions (day, plant_id, watered, fertilized, notes) VALUES (?,?,?,?,?) ON CONFLICT(day, plant_id) DO NOTHING RETURNING day, plant_id, watered, fertilized, notes")
+	if err != nil {
+		return nil, err
+	}
+	defer prep.Close()
+
+	action := &Action{}
+	day := time.Now().Format("2006-01-02")
+	err = prep.QueryRowContext(ctx, day, plantID, 0, 0, "").Scan(&action.Day, &action.PlantID, &action.Watered, &action.Fertilized, &action.Notes)
 	if err != nil {
 		return nil, err
 	}
