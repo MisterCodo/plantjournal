@@ -18,6 +18,7 @@ func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
 	g.PUT("/plants/:id/water", a.WaterPlant)
 	g.PUT("/plants/:id/fertilize", a.FertilizePlant)
 	g.DELETE("/plants/:id", a.DeletePlant)
+	g.DELETE("/plants/:id/actions/:day", a.DeleteAction)
 }
 
 // GetPlants returns the list of all plants.
@@ -182,4 +183,10 @@ func (a *APIV1Service) FertilizePlant(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "plant.html", p)
+}
+
+// DeleteAction deletes a maintenance action for the plant with passed id and the passed day.
+func (a *APIV1Service) DeleteAction(c echo.Context) error {
+	// TODO
+	return nil
 }
