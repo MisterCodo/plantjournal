@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"fmt"
 	"time"
 )
 
@@ -45,9 +46,33 @@ func (s *Store) GetActionsByPlantID(ctx context.Context, plantID int) ([]*Action
 	return actions, nil
 }
 
-// DeleteAction deletes the action with passed day.
-func (s *Store) DeleteAction(ctx context.Context, day string) error {
-	// TODO
+// DeleteAction deletes the action with passed pland id and action day.
+func (s *Store) DeleteAction(ctx context.Context, plantID int, day string) error {
+	prep, err := s.db.Prepare("DELETE FROM actions WHERE plant_id=? and day=?")
+	if err != nil {
+		return err
+	}
+	defer prep.Close()
+
+	// Validate day value is in expected format.
+	_, err = time.Parse("2006-01-02", day)
+	if err != nil {
+		return err
+	}
+
+	res, err := prep.ExecContext(ctx, plantID, day)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows != 1 {
+		return fmt.Errorf("failed to delete plant action")
+	}
+
 	return nil
 }
 

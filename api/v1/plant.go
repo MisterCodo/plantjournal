@@ -213,6 +213,28 @@ func (a *APIV1Service) AddNoteToPlant(c echo.Context) error {
 
 // DeleteAction deletes a maintenance action for the plant with passed id and the passed day.
 func (a *APIV1Service) DeleteAction(c echo.Context) error {
-	// TODO
-	return nil
+	ctx := c.Request().Context()
+
+	// Fetch plant details from request.
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+
+	// Fetch action date from request.
+	actionDay := c.Param("day")
+
+	// Delete plant from database.
+	err = a.Store.DeleteAction(ctx, id, actionDay)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to delete plant action").SetInternal(err)
+	}
+
+	// Refresh entire plant to see latest plant actions.
+	p, err := a.Store.GetPlantByID(ctx, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fetch plant").SetInternal(err)
+	}
+
+	return c.Render(http.StatusOK, "plant.html", p)
 }
