@@ -8,7 +8,7 @@
         <div class="columns is-centered">
           <div class="column">
             <figure class="image is-3x4 is-inline-block">
-              <img src="/static/{{.ID}}.jpg" alt="Default plant" />
+              <img src="/static/{{.ID}}.jpg" alt="Missing image for plant" />
             </figure>
           </div>
         </div>
@@ -190,18 +190,40 @@
               <tbody>
                 {{ range .Actions }}
                 <tr>
-                  <td style="text-align: center; width: 20%">{{ .Day }}</td>
-                  <td style="text-align: center; width: 7%">
+                  <td
+                    id="action-day-{{.Day}}"
+                    style="text-align: center; width: 20%"
+                  >
+                    {{ .Day }}
+                  </td>
+                  <td
+                    id="action-watered-{{.Day}}"
+                    style="text-align: center; width: 7%"
+                  >
                     {{ if .Watered }}
                     <i class="iconoir-droplet"></i>
                     {{ end }}
                   </td>
-                  <td style="text-align: center; width: 7%">
+                  <td
+                    id="action-fertilized-{{.Day}}"
+                    style="text-align: center; width: 7%"
+                  >
                     {{ if .Fertilized }}
                     <i class="iconoir-potion"></i>
                     {{ end }}
                   </td>
-                  <td contenteditable="true">{{ .Notes }}</td>
+                  <td
+                    id="action-notes-{{.Day}}"
+                    contenteditable="true"
+                    hx-put="/api/v1/plants/{{.PlantID}}/actions/{{.Day}}"
+                    hx-trigger="blur"
+                    hx-vals='js:{"watered": document.getElementById("action-watered-{{.Day}}").innerText,
+                                 "fertilized": document.getElementById("action-fertilized-{{.Day}}").innerText,
+                                 "notes": document.getElementById("action-notes-{{.Day}}").innerText}'
+                    hx-swap="none"
+                  >
+                    {{ .Notes }}
+                  </td>
                   <td style="text-align: center; width: 7%">
                     <button
                       hx-delete="/api/v1/plants/{{.PlantID}}/actions/{{.Day}}"

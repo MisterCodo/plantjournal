@@ -129,3 +129,28 @@ func (s *Store) AddNoteToPlant(ctx context.Context, plantID int) (*Action, error
 
 	return action, nil
 }
+
+// UdateAction updates the passed action in the database.
+func (s *Store) UpdateAction(ctx context.Context, a *Action) error {
+	// TODO: for now only updates notes, fix for watered and fertilized.
+	prep, err := s.db.Prepare("UPDATE actions SET notes=? WHERE day=? and plant_id=?")
+	if err != nil {
+		return err
+	}
+	defer prep.Close()
+
+	res, err := prep.ExecContext(ctx, a.Notes, a.Day, a.PlantID)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows != 1 {
+		return fmt.Errorf("failed to update action")
+	}
+
+	return nil
+}

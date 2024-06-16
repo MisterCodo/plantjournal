@@ -18,6 +18,7 @@ func (a *APIV1Service) registerPlantRoutes(g *echo.Group) {
 	g.PUT("/plants/:id/water", a.WaterPlant)
 	g.PUT("/plants/:id/fertilize", a.FertilizePlant)
 	g.PUT("/plants/:id/note", a.AddNoteToPlant)
+	g.PUT("/plants/:id/actions/:day", a.UpdateAction)
 	g.DELETE("/plants/:id", a.DeletePlant)
 	g.DELETE("/plants/:id/actions/:day", a.DeleteAction)
 }
@@ -209,6 +210,48 @@ func (a *APIV1Service) AddNoteToPlant(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "plant.html", p)
+}
+
+type UpdateActionRequest struct {
+	Watered    string `form:"watered"`
+	Fertilized string `form:"ferlilized"`
+	Notes      string `form:"notes"`
+}
+
+// UpdateAction updates a plant maintenance action for the plant with passed id and the passed day.
+func (a *APIV1Service) UpdateAction(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	// Fetch plant details from request.
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid plant id").SetInternal(err)
+	}
+
+	// Fetch action date from request.
+	actionDay := c.Param("day")
+
+	r := &UpdateActionRequest{}
+	if err := c.Bind(r); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "could not get details for action update request").SetInternal(err)
+	}
+
+	// Set action for store update.
+	action := &store.Action{
+		PlantID:    id,
+		Day:        actionDay,
+		Watered:    true,
+		Fertilized: true,
+		Notes:      r.Notes,
+	}
+
+	// Update action in database.
+	err = a.Store.UpdateAction(ctx, action)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to update action").SetInternal(err)
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 // DeleteAction deletes a maintenance action for the plant with passed id and the passed day.
