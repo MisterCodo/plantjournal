@@ -13,7 +13,7 @@ Plant Journal is a pet project meant to help take care of plants.
 ### Build and Run with Docker
 
 1. Run `docker build -t plantjournal .` to build the Docker image.
-2. Run `docker run -it -p 8080:8080 plantjournal:latest` to launch the image.
+2. Run `docker run -it --rm -v <path-to-your-db-file>:/home/appuser/plant.db -p 8080:8080 plantjournal:latest` to launch the image.
 3. Access the application at [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
 
 ## Features
@@ -25,9 +25,7 @@ Plant Journal is a pet project meant to help take care of plants.
   - Toxicity
   - Additional notes
 - Pictures
-- Track quarantine
-- Track pests and pest treatment
-- Obituary section
+- Track watering, fertilizing and maintenance notes
 
 ## Out of Scope / Won't do
 
