@@ -147,7 +147,7 @@ func (a *APIV1Service) WaterPlant(c echo.Context) error {
 	}
 
 	// Upsert watering action in database.
-	_, err = a.Store.WaterPlant(ctx, id)
+	err = a.Store.WaterPlant(ctx, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to water plant").SetInternal(err)
 	}
@@ -173,7 +173,7 @@ func (a *APIV1Service) FertilizePlant(c echo.Context) error {
 	}
 
 	// Upsert fertilizing action in database.
-	_, err = a.Store.FertilizePlant(ctx, id)
+	err = a.Store.FertilizePlant(ctx, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to fertilize plant").SetInternal(err)
 	}
@@ -198,7 +198,7 @@ func (a *APIV1Service) AddNoteToPlant(c echo.Context) error {
 	}
 
 	// Upsert add note to plant action in database.
-	_, err = a.Store.AddNoteToPlant(ctx, id)
+	err = a.Store.AddNoteToPlant(ctx, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to add note to plant").SetInternal(err)
 	}

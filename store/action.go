@@ -77,57 +77,72 @@ func (s *Store) DeleteAction(ctx context.Context, plantID int, day string) error
 }
 
 // WaterPlant upserts an action for the day, indicating plant was watered.
-func (s *Store) WaterPlant(ctx context.Context, plantID int) (*Action, error) {
-	prep, err := s.db.Prepare("INSERT INTO actions (day, plant_id, watered, fertilized, notes) VALUES (?,?,?,?,?) ON CONFLICT(day, plant_id) DO UPDATE SET watered = ? RETURNING day, plant_id, watered, fertilized, notes")
+func (s *Store) WaterPlant(ctx context.Context, plantID int) error {
+	prep, err := s.db.Prepare("INSERT INTO actions (day, plant_id, watered, fertilized, notes) VALUES (?,?,?,?,?) ON CONFLICT(day, plant_id) DO UPDATE SET watered = ?")
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer prep.Close()
 
-	action := &Action{}
 	day := time.Now().Format("2006-01-02")
-	err = prep.QueryRowContext(ctx, day, plantID, 1, 0, "", 1).Scan(&action.Day, &action.PlantID, &action.Watered, &action.Fertilized, &action.Notes)
+	res, err := prep.ExecContext(ctx, day, plantID, 1, 0, "", 1)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return action, nil
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows != 1 {
+		return fmt.Errorf("failed to update watered value for action")
+	}
+
+	return nil
 }
 
 // FertilizePlant upserts an action for the day, indicating plant was fertilized.
-func (s *Store) FertilizePlant(ctx context.Context, plantID int) (*Action, error) {
-	prep, err := s.db.Prepare("INSERT INTO actions (day, plant_id, watered, fertilized, notes) VALUES (?,?,?,?,?) ON CONFLICT(day, plant_id) DO UPDATE SET fertilized = ? RETURNING day, plant_id, watered, fertilized, notes")
+func (s *Store) FertilizePlant(ctx context.Context, plantID int) error {
+	prep, err := s.db.Prepare("INSERT INTO actions (day, plant_id, watered, fertilized, notes) VALUES (?,?,?,?,?) ON CONFLICT(day, plant_id) DO UPDATE SET fertilized = ?")
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer prep.Close()
 
-	action := &Action{}
 	day := time.Now().Format("2006-01-02")
-	err = prep.QueryRowContext(ctx, day, plantID, 0, 1, "", 1).Scan(&action.Day, &action.PlantID, &action.Watered, &action.Fertilized, &action.Notes)
+	res, err := prep.ExecContext(ctx, day, plantID, 0, 1, "", 1)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return action, nil
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows != 1 {
+		return fmt.Errorf("failed to update fertilized value for action")
+	}
+
+	return nil
 }
 
-// AddNoteToPlant upserts an action for the day.
-func (s *Store) AddNoteToPlant(ctx context.Context, plantID int) (*Action, error) {
-	prep, err := s.db.Prepare("INSERT INTO actions (day, plant_id, watered, fertilized, notes) VALUES (?,?,?,?,?) ON CONFLICT(day, plant_id) DO NOTHING RETURNING day, plant_id, watered, fertilized, notes")
+// AddNoteToPlant inserts an action for the day if it does not already exists. Watered and fertilized default to 0 while notes defaults to empty string.
+func (s *Store) AddNoteToPlant(ctx context.Context, plantID int) error {
+	prep, err := s.db.Prepare("INSERT INTO actions (day, plant_id, watered, fertilized, notes) VALUES (?,?,?,?,?) ON CONFLICT(day, plant_id) DO NOTHING")
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer prep.Close()
 
-	action := &Action{}
 	day := time.Now().Format("2006-01-02")
-	err = prep.QueryRowContext(ctx, day, plantID, 0, 0, "").Scan(&action.Day, &action.PlantID, &action.Watered, &action.Fertilized, &action.Notes)
+	_, err = prep.ExecContext(ctx, day, plantID, 0, 0, "")
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return action, nil
+	// OK if affected rows is 0, so don't check
+
+	return nil
 }
 
 // UdateAction updates the passed action in the database.
